@@ -1,15 +1,14 @@
 # Item Types 
-#	0	Armor ?					10	Dye					20	Gold Coin
-#	1							11	Crafting Mat		21	Map Piece
-#	2	Axe						12	Focus				22	Scepter
-#	3							13						23
-#	4							14						24 	Shield
-#	5 	Bow						15	Hammer				25
-#	6							16						26 	Staff
-#	7							17						27 	Sword
-#	8							18	Lockpick			28	
-#	9	Tome					19						29
-
+#	0	Armor 				10	Dye					20	Gold Coin
+#	1						11	Crafting Mat		21	Map Piece
+#	2	Axe					12	Focus				22	Scepter
+#	3						13						23
+#	4						14						24 	Shield
+#	5 	Bow					15	Hammer				25
+#	6						16						26 	Staff
+#	7						17						27 	Sword
+#	8						18	Lockpick			28	
+#	9	Tome				19						29
 
 Match 
 	Sound "D:\Games\_Resources\GWDropSounds\Sounds\insane_sound.wav"
@@ -24,7 +23,7 @@ Match
 
 Match 
 	Sound "D:\Games\_Resources\GWDropSounds\Sounds\3.wav"
-	ItemName "Diamond" "Lockpick"
+	ItemName "Diamond" "Lockpick" "Vial of Dye [White]"
 	Priority "2"
 
 # Crafting Material
@@ -51,31 +50,31 @@ Match
 	ItemType "30"
 	Priority "9"
 
-# White
+# Common (White)
 Match 
 	Sound "D:\Games\_Resources\GWDropSounds\Sounds\1.wav"
 	Rarity "0"
 	Priority "7"
 
-# Blue
+# Magical (Blue)
 Match 
 	Sound "D:\Games\_Resources\GWDropSounds\Sounds\2.wav"
 	Rarity "1"
 	Priority "6"
 
-# Purple
+# Uncommon (Purple)
 Match 
 	Sound "D:\Games\_Resources\GWDropSounds\Sounds\2.wav"
 	Rarity "2"
 	Priority "5"
 
-# Gold
+# Rare (Gold)
 Match 
 	Sound "D:\Games\_Resources\GWDropSounds\Sounds\3.wav"
 	Rarity "3"
 	Priority "1"
 
-# Green
+# Unique (Green)
 Match 
 	Sound "D:\Games\_Resources\GWDropSounds\Sounds\insane_sound.wav"
 	Rarity "4"

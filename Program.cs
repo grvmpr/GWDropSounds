@@ -2,40 +2,32 @@
 using System.Media;
 using System.Text;
 using System.Text.RegularExpressions;
-//using System;
-//using System.Collections.Generic;
-//using NAudio.Wave;
-//using NAudio.Wave.SampleProviders;
 using Microsoft.Extensions.Configuration;
 
 AppConfig _cfg = new();
 
-//Dictionary<string, DateTimeOffset> _plays = new();
-
 var debounceMs = 10;
-DateTime last = DateTime.MinValue;
+var last = DateTime.MinValue;
 object gate = new();
 
 Console.OutputEncoding = Encoding.UTF8;
 
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(AppContext.BaseDirectory)
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .Build();
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(AppContext.BaseDirectory)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .Build();
 
-        _cfg = configuration.Get<AppConfig>() ?? throw new Exception("Failed to load config.");
+_cfg = configuration.Get<AppConfig>() ?? throw new Exception("Failed to load config.");
         
 var matchPath = _cfg.RulesFile;
-var csvPath = Helper.ResolveDailyCsvPath(_cfg.InputDirectory); // Path.Combine(_cfg.InputDirectory, "2026-02-04_drops.csv");
-
+var csvPath = Helper.ResolveDailyCsvPath(_cfg.InputDirectory);
 var rules = Helper.LoadRules(matchPath);
-
 var lines = Helper.GetNewLines(csvPath);
 
 using var matchWatcher = new FileSystemWatcher(Path.GetDirectoryName(matchPath)!, Path.GetFileName(matchPath))
 {
     EnableRaisingEvents = true,
-    NotifyFilter = NotifyFilters.LastWrite //| NotifyFilters.Size | NotifyFilters.FileName
+    NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.FileName
 };
 
 matchWatcher.Changed += (_, __) =>
@@ -49,6 +41,8 @@ matchWatcher.Changed += (_, __) =>
             last = now;
         }
 
+        System.Threading.Thread.Sleep(100); // slight delay to ensure file write is complete; adjust as needed
+
         var matches = Helper.LoadRules(matchPath);
 
         Console.WriteLine("Match file changed");
@@ -59,12 +53,10 @@ matchWatcher.Changed += (_, __) =>
     }
 };
 
-
-
 using var csvWatcher = new FileSystemWatcher(Path.GetDirectoryName(csvPath)!, Path.GetFileName(csvPath))
 {
     EnableRaisingEvents = true,
-    NotifyFilter = NotifyFilters.LastWrite // | NotifyFilters.Size | NotifyFilters.FileName
+    NotifyFilter = NotifyFilters.LastWrite  | NotifyFilters.Size | NotifyFilters.FileName
 };
 
 csvWatcher.Changed += (_, __) =>
@@ -109,7 +101,7 @@ public class Helper
 {
     private static long _offsetBytes = 0;
 
-public static string ResolveDailyCsvPath(string inputDirectory)
+    public static string ResolveDailyCsvPath(string inputDirectory)
     {
         var today = DateTime.Now.Date;
         var yesterday = today.AddDays(-1);
@@ -212,88 +204,6 @@ public static string ResolveDailyCsvPath(string inputDirectory)
         return matches;
     }
 
-    public static List<Match> GetMatches2(List<Item> items, List<Match> rules)
-    {
-        var matches = new List<Match>();
-
-        foreach (var item in items)
-        {
-            bool added = false;
-            foreach (var rule in rules)
-            {
-                //var matchName = 
-
-
-                bool isMatch =
-                    (rule.ItemName?.Contains(item.ItemName) ?? false) ||
-                    (rule.ItemType?.Contains(item.ItemType) ?? false) ||
-                    (rule.Rarity?.Contains(item.Rarity) ?? false);
-
-                if (isMatch && added == false)
-                {
-                    matches.Add(rule);
-                    added = true;
-                }
-            }
-        }
-
-        return matches;
-    }
-
-    public static List<Match> GetMatches3(List<Item> items, List<Match> rules)
-    {
-        var matches = new List<Match>();
-
-
-        foreach (var item in items)
-        {
-            var isMatch = false;
-            foreach (var rule in rules)
-            {
-                if (isMatch == false)
-                {
-                    var nameMatch = rule.ItemName == null ? -1 : 0;
-                    var typeMatch = rule.ItemType == null ? -1 : 0;
-                    var rarityMatch = rule.Rarity == null ? -1 : 0;
-
-
-                    if (rule.ItemName != null)
-                    {
-                        foreach (var col in rule.ItemName)
-                        {
-                            isMatch = item.ItemName == col;
-                        }
-                    }
-                    
-                        
-                    foreach (var col in rule.ItemName)
-                    {
-                        nameMatch = item.ItemName == col ? 1: 0;
-                    }
-                    foreach (var col in rule.ItemType)
-                    {
-                        typeMatch = item.ItemType == col ? 1 : 0;
-                    }
-                    foreach (var col in rule.Rarity)
-                    {
-                        rarityMatch = item.Rarity == col ? 1 : 0;
-                    }
-
-                    //var m = new int[nameMatch, typeMatch, rarityMatch];
-
-                    isMatch = nameMatch != 0 && typeMatch != 0 && rarityMatch != 0;
-
-                    if (isMatch == true)
-                    {
-                        matches.Add(rule);
-                    }
-                }
-            }
-        }
-
-        return matches;
-    }
-
     public static void PlayOverlapped(string wavPath)
     {
         // Fire-and-forget to avoid any chance of blocking file watcher thread
@@ -376,7 +286,7 @@ public static string ResolveDailyCsvPath(string inputDirectory)
         matches.Add(current);
     }
 
-    return matches;
+    return matches.OrderBy(m => m.Priority).ToList();
 }
 
 private static string[] ExtractQuotedValues(string line)
