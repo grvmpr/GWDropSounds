@@ -1,11 +1,13 @@
+# Instructions
+
 1. Edit appconfig paths to point to your local file locations
-2. Compile
-3. Run
+2. Terminal [dotnet run] in VSCode
 
-Note:
+# Note:
   You may have to restart the app (and GW Client) daily to read the newest loot file produced by GWToolbox
-
-Provided as is
+  Only wav files work (I think)
+  
+# Provided as is
 Limited error handling. 
 I'm lazy
    
