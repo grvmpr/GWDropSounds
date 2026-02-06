@@ -21,7 +21,7 @@ _cfg = configuration.Get<AppConfig>() ?? throw new Exception("Failed to load con
         
 var matchPath = _cfg.RulesFile;
 var csvPath = Helper.ResolveDailyCsvPath(_cfg.InputDirectory);
-var rules = Helper.LoadRules(matchPath);
+var rules = Helper.LoadRules(matchPath, _cfg.SoundFileRootDirectory);
 var lines = Helper.GetNewLines(csvPath);
 
 using var matchWatcher = new FileSystemWatcher(Path.GetDirectoryName(matchPath)!, Path.GetFileName(matchPath))
@@ -43,7 +43,7 @@ matchWatcher.Changed += (_, __) =>
 
         System.Threading.Thread.Sleep(100); // slight delay to ensure file write is complete; adjust as needed
 
-        var matches = Helper.LoadRules(matchPath);
+        var matches = Helper.LoadRules(matchPath, _cfg.SoundFileRootDirectory);
 
         Console.WriteLine("Match file changed");
     }
@@ -95,7 +95,7 @@ internal sealed class AppConfig
 {
     public string InputDirectory { get; set; } = "";
     public string RulesFile { get; set; } = "";
-
+    public string SoundFileRootDirectory { get; set; } = "";
 }
 public class Helper
 {
@@ -231,7 +231,7 @@ public class Helper
         });
     }
 
-    public static List<Match> LoadRules(string filePath)
+    public static List<Match> LoadRules(string filePath, string soundRootDirectory = "")
 {
     var matches = new List<Match>();
     Match current = null;
@@ -260,7 +260,7 @@ public class Helper
 
         if (line.StartsWith("Sound"))
         {
-            current.Sound = ExtractQuotedValues(line).FirstOrDefault();
+            current.Sound = Path.Combine(soundRootDirectory, ExtractQuotedValues(line).FirstOrDefault());
         }
         else if (line.StartsWith("ItemName"))
         {
