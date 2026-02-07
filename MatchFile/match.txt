@@ -30,7 +30,7 @@ Match
 Match 
 	Sound "8.wav"
 	ItemType "11"
-	Priority "9"
+	Priority "3"
 
 # Dye
 Match 
@@ -42,7 +42,7 @@ Match
 Match 
 	Sound "6.wav"
 	ItemType "9"
-	Priority "9"
+	Priority "3"
 
 # Special Item (Glacial Stones, Lunar Tokens etc)
 Match 
