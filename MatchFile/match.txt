@@ -19,7 +19,7 @@ Match
 Match 
 	Sound "d2\gold.wav"
 	ItemName "Gold Coin"
-	Priority "9"
+	Priority "2"
 
 Match 
 	Sound "3.wav"
@@ -48,7 +48,7 @@ Match
 Match 
 	Sound "11.wav"
 	ItemType "30"
-	Priority "9"
+	Priority "3"
 
 # Common (White)
 Match 
