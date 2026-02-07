@@ -43,7 +43,7 @@ matchWatcher.Changed += (_, __) =>
 
         System.Threading.Thread.Sleep(100); // slight delay to ensure file write is complete; adjust as needed
 
-        var matches = Helper.LoadRules(matchPath, _cfg.SoundFileRootDirectory);
+        rules = Helper.LoadRules(matchPath, _cfg.SoundFileRootDirectory);
 
         Console.WriteLine("Match file changed");
     }
