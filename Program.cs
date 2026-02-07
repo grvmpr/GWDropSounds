@@ -195,6 +195,7 @@ public class Helper
 
                 if (isMatch && !added)
                 {
+                    Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}] Added rule: {rule.Sound} for item {item.ItemName} ({item.ItemType}, {item.Rarity})");
                     matches.Add(rule);
                     added = true;
                 }
